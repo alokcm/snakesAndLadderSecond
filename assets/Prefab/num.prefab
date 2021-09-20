@@ -60,6 +60,7 @@
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "node": {
       "__id__": 1
     },
@@ -69,8 +70,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 31.68,
-      "height": 50.4
+      "width": 27.46,
+      "height": 44.1
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -87,6 +88,7 @@
     "__type__": "cc.Label",
     "_name": "",
     "_objFlags": 0,
+    "__editorExtras__": {},
     "node": {
       "__id__": 1
     },
@@ -100,18 +102,18 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 141,
-      "g": 125,
-      "b": 125,
+      "r": 233,
+      "g": 211,
+      "b": 211,
       "a": 255
     },
     "_string": "asxa",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 15,
-    "_fontSize": 15,
+    "_actualFontSize": 13,
+    "_fontSize": 13,
     "_fontFamily": "Arial",
-    "_lineHeight": 40,
+    "_lineHeight": 35,
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": null,
