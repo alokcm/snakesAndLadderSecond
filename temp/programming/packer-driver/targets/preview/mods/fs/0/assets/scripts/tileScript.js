@@ -82,11 +82,7 @@ System.register(["cc"], function (_export, _context) {
 
           _defineProperty(_assertThisInitialized(_this), "tileLayer", null);
 
-          _defineProperty(_assertThisInitialized(_this), "tile", null);
-
           _defineProperty(_assertThisInitialized(_this), "tileCurrPos", null);
-
-          _defineProperty(_assertThisInitialized(_this), "noOfSix", 0);
 
           _defineProperty(_assertThisInitialized(_this), "playerOneTileX", 0);
 
@@ -95,10 +91,6 @@ System.register(["cc"], function (_export, _context) {
           _defineProperty(_assertThisInitialized(_this), "playerTwoTileX", 0);
 
           _defineProperty(_assertThisInitialized(_this), "playerTwoTileY", 9);
-
-          _defineProperty(_assertThisInitialized(_this), "playerOneinitialPos", null);
-
-          _defineProperty(_assertThisInitialized(_this), "playertwoInitialPos", null);
 
           _defineProperty(_assertThisInitialized(_this), "arrayOfSnakesHead", []);
 
@@ -112,10 +104,6 @@ System.register(["cc"], function (_export, _context) {
 
           _defineProperty(_assertThisInitialized(_this), "sumOfChances", 0);
 
-          _defineProperty(_assertThisInitialized(_this), "tweenDice1", void 0);
-
-          _defineProperty(_assertThisInitialized(_this), "tweenDice2", void 0);
-
           _defineProperty(_assertThisInitialized(_this), "button1", null);
 
           _defineProperty(_assertThisInitialized(_this), "button2", null);
@@ -127,31 +115,19 @@ System.register(["cc"], function (_export, _context) {
 
         _proto.start = function start() {
           this.tileLayer = this.tileMap.getLayer('Tile Layer 1');
-          this.tileCurrPos = this.tileLayer.getTiledTileAt(0, 9, true).node.position; //fixing positions of both player at starting positions
-
+          this.tileCurrPos = this.tileLayer.getTiledTileAt(0, 9, true).node.position;
           this.playerOne.setPosition(new Vec3(this.tileCurrPos.x + 8, this.tileCurrPos.y + 15, 0));
-          this.playerTwo.setPosition(new Vec3(this.tileCurrPos.x + 25, this.tileCurrPos.y + 15, 0)); //filling every tile with numbers
-
+          this.playerTwo.setPosition(new Vec3(this.tileCurrPos.x + 25, this.tileCurrPos.y + 15, 0));
           var k = 1;
 
           for (var i = 9; i >= 0; i--) {
             if (i % 2 == 0) {
               for (var l = 9; l >= 0; l--) {
-                var ch = instantiate(this.prefabLabel);
-                var tileNow = this.tileLayer.getTiledTileAt(l, i, true).node.position;
-                ch.getComponent(Label).string = "" + k++;
-                this.tileMap.node.addChild(ch);
-                ch.setPosition(tileNow.x + 10, tileNow.y - 8, 1);
+                this.addLabel(l, i, k++);
               }
             } else {
               for (var j = 0; j <= 9; j++) {
-                var _ch = instantiate(this.prefabLabel);
-
-                var _tileNow = this.tileLayer.getTiledTileAt(j, i, true).node.position;
-                _ch.getComponent(Label).string = "" + k++;
-                this.tileMap.node.addChild(_ch);
-
-                _ch.setPosition(_tileNow.x + 10, _tileNow.y - 8, 1);
+                this.addLabel(j, i, k++);
               }
             }
           }
@@ -164,27 +140,19 @@ System.register(["cc"], function (_export, _context) {
           this.button2 = this.node.getChildByName('play2');
         };
 
-        _proto.rollDice = function rollDice(event, customData) {
-          var btn = null;
-
-          if (customData == '1') {
-            btn = this.node.getChildByName('play1');
-          } else {
-            btn = this.node.getChildByName('play2');
-          }
-
-          var randomDice = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
-          btn.getComponent(Sprite).spriteFrame = this.arrayOfDices[randomDice - 1];
-          return randomDice;
+        _proto.addLabel = function addLabel(j, i, k) {
+          var ch = instantiate(this.prefabLabel);
+          var tileNow = this.tileLayer.getTiledTileAt(j, i, true).node.position;
+          ch.getComponent(Label).string = "" + k;
+          this.tileMap.node.addChild(ch);
+          ch.setPosition(tileNow.x + 10, tileNow.y - 8, 1);
         };
-
-        _proto.onLoad = function onLoad() {};
 
         _proto.addSnakes = function addSnakes() {
           var noOfSnakes = Math.floor(Math.random() * (5 - 2 + 1)) + 2;
 
           for (var i = 1; i <= noOfSnakes; i++) {
-            var randomStartX = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
+            var randomStartX = Math.floor(Math.random() * (9 - 1 + 1)) + 1;
             var randomStartY = Math.floor(Math.random() * (7 - 0 + 1)) + 0;
             var snakeHead = [randomStartX, randomStartY];
             this.arrayOfSnakesHead.push(snakeHead);
@@ -215,7 +183,7 @@ System.register(["cc"], function (_export, _context) {
           var noOfLadders = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
 
           for (var i = 1; i <= noOfLadders; i++) {
-            var randomStartX = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
+            var randomStartX = Math.floor(Math.random() * (9 - 1 + 1)) + 1;
             var randomStartY = Math.floor(Math.random() * (7 - 0 + 1)) + 0;
             var ladderHead = [randomStartX, randomStartY];
             this.arrayOfLaddersHead.push(ladderHead);
@@ -239,262 +207,257 @@ System.register(["cc"], function (_export, _context) {
           }
         };
 
-        _proto.movePlayer = function movePlayer(event, btnNumber) {
-          var _this2 = this;
+        _proto.rollDice = function rollDice(event, customData) {
+          var btn = null;
 
-          this.scheduleOnce(function () {
-            _this2.button1.active = false;
-            _this2.button2.active = false;
-          }, 0.2);
-          var diceNum = this.rollDice(event, btnNumber);
-          console.log('diceNum ' + diceNum);
-          var initialX = this.playerOneTileX;
-          this.arrayOfChances.push([this.playerOneTileX, this.playerOneTileY]);
-
-          if (this.playerOneTileX == 0 && this.playerOneTileY == 9) {
-            if (diceNum != 6 && diceNum != 1) diceNum = 0;
+          if (customData == '1') {
+            btn = this.button1;
+          } else {
+            btn = this.button2;
           }
 
-          if (this.playerOneTileY % 2 == 1) {
-            this.playerOneTileX += diceNum;
+          var randomDice = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+          btn.getComponent(Sprite).spriteFrame = this.arrayOfDices[randomDice - 1];
+          return randomDice;
+        };
 
-            if (this.playerOneTileX > 9) {
-              this.playerOneTileY -= 1;
-              this.playerOneTileX = 10 - (this.playerOneTileX - 9);
+        _proto.moveNode = function moveNode(playerNode, chances, checkPlayer) {
+          var _this2 = this;
+
+          var x = null;
+          var y = null;
+          var ret = chances * 0.5;
+
+          if (checkPlayer == '1') {
+            x = this.playerOneTileX;
+            y = this.playerOneTileY;
+          } else {
+            x = this.playerTwoTileX;
+            y = this.playerTwoTileY;
+          }
+
+          var id = setInterval(function () {
+            if (y % 2 == 0) {
+              x--;
+
+              if (x < 0) {
+                x = 0;
+                y--;
+              }
+            } else {
+              x++;
+
+              if (x > 9) {
+                x = 9;
+                y--;
+              }
             }
 
-            if (this.playerOneTileY < 0) {
-              this.playerOneTileY = 0;
-              this.playerOneTileX = initialX;
-              diceNum = 0;
-            }
+            var nextPos = _this2.tileLayer.getTiledTileAt(x, y).node.position;
 
-            this.sumOfChances += diceNum;
-            var nextPos = this.tileLayer.getTiledTileAt(this.playerOneTileX, this.playerOneTileY).node.position;
-            tween(this.playerOne).to(1.2, {
+            tween(playerNode).to(0.5, {
               position: new Vec3(nextPos.x + 8, nextPos.y + 15, 1)
             }, {
               easing: 'sineIn'
             }).start();
-            console.log(this.playerOneTileX, this.playerOneTileY);
-          } else {
-            this.playerOneTileX -= diceNum;
 
-            if (this.playerOneTileX < 0) {
-              this.playerOneTileY -= 1;
-              this.playerOneTileX = 0 - this.playerOneTileX - 1;
-            }
-
-            if (this.playerOneTileY < 0) {
-              this.playerOneTileY = 0;
-              this.playerOneTileX = initialX;
-              diceNum = 0;
-            }
-
-            this.sumOfChances += diceNum;
-            var _nextPos = this.tileLayer.getTiledTileAt(this.playerOneTileX, this.playerOneTileY).node.position;
-            tween(this.playerOne).to(1.2, {
-              position: new Vec3(_nextPos.x + 8, _nextPos.y + 15, 1)
-            }, {
-              easing: 'sineIn'
-            }).start();
-            console.log(this.playerOneTileX, this.playerOneTileY);
-          }
-
-          this.scheduleOnce(function () {
-            for (var i = 0; i < _this2.arrayOfSnakesHead.length; i++) {
-              if (_this2.arrayOfSnakesHead[i][0] == _this2.playerOneTileX && _this2.arrayOfSnakesHead[i][1] == _this2.playerOneTileY) {
-                var _nextPos2 = _this2.tileLayer.getTiledTileAt(_this2.arrayOfSnakesTail[i][0], _this2.arrayOfSnakesTail[i][1]).node.position;
-
-                tween(_this2.playerOne).to(1, {
-                  position: new Vec3(_nextPos2.x + 8, _nextPos2.y + 15, 1)
-                }, {
-                  easing: 'sineIn'
-                }).start();
-                _this2.playerOneTileX = _this2.arrayOfSnakesTail[i][0];
-                _this2.playerOneTileY = _this2.arrayOfSnakesTail[i][1];
-              }
-            }
-          }, 1.21);
-          this.scheduleOnce(function () {
-            for (var i = 0; i < _this2.arrayOfLaddersTail.length; i++) {
-              if (_this2.arrayOfLaddersTail[i][0] == _this2.playerOneTileX && _this2.arrayOfLaddersTail[i][1] == _this2.playerOneTileY) {
-                var _nextPos3 = _this2.tileLayer.getTiledTileAt(_this2.arrayOfLaddersHead[i][0], _this2.arrayOfLaddersHead[i][1]).node.position;
-
-                tween(_this2.playerOne).to(1, {
-                  position: new Vec3(_nextPos3.x + 8, _nextPos3.y + 15, 1)
-                }, {
-                  easing: 'sineIn'
-                }).start();
-                _this2.playerOneTileX = _this2.arrayOfLaddersHead[i][0];
-                _this2.playerOneTileY = _this2.arrayOfLaddersHead[i][1];
-              }
-            }
-          }, 1.22);
-          this.scheduleOnce(function () {
-            if (_this2.playerOneTileX == 0 && _this2.playerOneTileY == 0) {
-              _this2.node.getChildByName('playerOneWon').active = true;
-
-              _this2.scheduleOnce(function () {
-                _this2.button1.active = false;
-                _this2.button2.active = false;
-                director.pause();
-              }, 2);
-            }
-
-            if (_this2.sumOfChances % 6 == 0 && _this2.sumOfChances != 0 && _this2.sumOfChances != 18) {
-              _this2.button1.active = true;
-            } else if (_this2.sumOfChances == 18) {
-              _this2.sumOfChances = 0;
-
-              var _nextPos4 = _this2.tileLayer.getTiledTileAt(_this2.arrayOfChances[0][0], _this2.arrayOfChances[0][1]).node.position;
-
-              tween(_this2.playerOne).to(1, {
-                position: new Vec3(_nextPos4.x + 8, _nextPos4.y + 15, 1)
-              }, {
-                easing: 'sineIn'
-              }).start();
-              _this2.playerOneTileX = _this2.arrayOfChances[0][0];
-              _this2.playerOneTileY = _this2.arrayOfChances[0][1];
-              _this2.arrayOfChances = [];
-              _this2.button2.active = true;
+            if (checkPlayer == '1') {
+              _this2.playerOneTileX = x;
+              _this2.playerOneTileY = y;
             } else {
-              _this2.arrayOfChances = [];
-              _this2.sumOfChances = 0;
-              _this2.button2.active = true;
+              _this2.playerTwoTileX = x;
+              _this2.playerTwoTileY = y;
             }
-          }, 0.21);
+          }, 500);
+          this.scheduleOnce(function () {
+            clearInterval(id);
+          }, ret + 0.1);
+          return ret + 0.5;
         };
 
-        _proto.movePlayer2 = function movePlayer2(event, btnNumber) {
+        _proto.movePlayer = function movePlayer(event, btnNumber) {
           var _this3 = this;
+
+          var node = null;
+          var x, y;
+          var waitTime = 0;
+          var child = null;
+          var initialX = null;
+
+          if (btnNumber == '1') {
+            node = this.playerOne;
+            x = this.playerOneTileX;
+            y = this.playerOneTileY;
+            child = 'playerOneWon';
+            initialX = this.playerOneTileX;
+          } else {
+            node = this.playerTwo;
+            x = this.playerTwoTileX;
+            y = this.playerTwoTileY;
+            child = 'playerTwoWon';
+            initialX = this.playerTwoTileX;
+          }
 
           this.scheduleOnce(function () {
             _this3.button1.active = false;
             _this3.button2.active = false;
           }, 0.2);
           var diceNum = this.rollDice(event, btnNumber);
-          var intialX = this.playerTwoTileX;
-          console.log('diceNum = ' + diceNum);
-          this.arrayOfChances.push([this.playerTwoTileX, this.playerTwoTileY]); //check to start only if dice is 6 or 1
+          console.log('diceNum ' + diceNum);
+          this.arrayOfChances.push([x, y]);
 
-          if (this.playerTwoTileX == 0 && this.playerTwoTileY == 9) {
+          if (x == 0 && y == 9) {
             if (diceNum != 6 && diceNum != 1) diceNum = 0;
           }
 
-          if (this.playerTwoTileY % 2 == 1) {
-            this.playerTwoTileX += diceNum;
+          if (y % 2 == 1) {
+            x += diceNum;
 
-            if (this.playerTwoTileX > 9) {
-              this.playerTwoTileY -= 1;
-              this.playerTwoTileX = 10 - (this.playerTwoTileX - 9);
+            if (x > 9) {
+              y -= 1;
+              x = 10 - (x - 9);
             }
 
-            if (this.playerTwoTileY < 0) {
-              this.playerTwoTileY = 0;
-              this.playerTwoTileX = intialX;
+            if (y < 0) {
+              y = 0;
+              x = initialX;
               diceNum = 0;
             }
 
             this.sumOfChances += diceNum;
-            var nextPos = this.tileLayer.getTiledTileAt(this.playerTwoTileX, this.playerTwoTileY).node.position;
-
-            if (diceNum != 0) {
-              tween(this.playerTwo).to(1.2, {
-                position: new Vec3(nextPos.x + 8, nextPos.y + 15, 1)
-              }, {
-                easing: 'sineIn'
-              }).start();
-            }
-
-            console.log(this.playerTwoTileX, this.playerTwoTileY);
+            waitTime = this.moveNode(node, diceNum, btnNumber);
           } else {
-            this.playerTwoTileX -= diceNum;
+            x -= diceNum;
 
-            if (this.playerTwoTileX < 0) {
-              this.playerTwoTileY -= 1;
-              this.playerTwoTileX = 0 - this.playerTwoTileX - 1;
+            if (x < 0) {
+              y -= 1;
+              x = 0 - x - 1;
             }
 
-            if (this.playerTwoTileY < 0) {
-              this.playerTwoTileY = 0;
-              this.playerTwoTileX = intialX;
+            if (y < 0) {
+              y = 0;
+              x = initialX;
               diceNum = 0;
             }
 
             this.sumOfChances += diceNum;
-            var _nextPos5 = this.tileLayer.getTiledTileAt(this.playerTwoTileX, this.playerTwoTileY).node.position;
-            tween(this.playerTwo).to(1.2, {
-              position: new Vec3(_nextPos5.x + 8, _nextPos5.y + 15, 1)
-            }, {
-              easing: 'sineIn'
-            }).start();
-            console.log(this.playerTwoTileX, this.playerTwoTileY);
+            waitTime = this.moveNode(node, diceNum, btnNumber);
           }
 
+          if (waitTime == 0) {
+            if (btnNumber == '1') {
+              x = this.playerOneTileX;
+              y = this.playerOneTileY;
+            } else {
+              x = this.playerTwoTileX;
+              y = this.playerTwoTileY;
+            }
+          }
+
+          console.log('wait time ' + waitTime);
           this.scheduleOnce(function () {
             for (var i = 0; i < _this3.arrayOfSnakesHead.length; i++) {
-              if (_this3.arrayOfSnakesHead[i][0] == _this3.playerTwoTileX && _this3.arrayOfSnakesHead[i][1] == _this3.playerTwoTileY) {
-                var _nextPos6 = _this3.tileLayer.getTiledTileAt(_this3.arrayOfSnakesTail[i][0], _this3.arrayOfSnakesTail[i][1]).node.position;
+              if (_this3.arrayOfSnakesHead[i][0] == x && _this3.arrayOfSnakesHead[i][1] == y) {
+                var nextPos = _this3.tileLayer.getTiledTileAt(_this3.arrayOfSnakesTail[i][0], _this3.arrayOfSnakesTail[i][1]).node.position;
 
-                tween(_this3.playerTwo).to(1, {
-                  position: new Vec3(_nextPos6.x + 8, _nextPos6.y + 15, 1)
+                tween(node).to(1, {
+                  position: new Vec3(nextPos.x + 8, nextPos.y + 15, 1)
                 }, {
                   easing: 'sineIn'
                 }).start();
-                _this3.playerTwoTileX = _this3.arrayOfSnakesTail[i][0];
-                _this3.playerTwoTileY = _this3.arrayOfSnakesTail[i][1];
+
+                if (btnNumber == '1') {
+                  _this3.playerOneTileX = _this3.arrayOfSnakesTail[i][0];
+                  _this3.playerOneTileY = _this3.arrayOfSnakesTail[i][1];
+                } else {
+                  _this3.playerTwoTileX = _this3.arrayOfSnakesTail[i][0];
+                  _this3.playerTwoTileY = _this3.arrayOfSnakesTail[i][1];
+                }
               }
             }
-          }, 1.21);
+          }, waitTime + 0.2);
           this.scheduleOnce(function () {
             for (var i = 0; i < _this3.arrayOfLaddersTail.length; i++) {
-              if (_this3.arrayOfLaddersTail[i][0] == _this3.playerTwoTileX && _this3.arrayOfLaddersTail[i][1] == _this3.playerTwoTileY) {
-                var _nextPos7 = _this3.tileLayer.getTiledTileAt(_this3.arrayOfLaddersHead[i][0], _this3.arrayOfLaddersHead[i][1]).node.position;
+              if (_this3.arrayOfLaddersTail[i][0] == x && _this3.arrayOfLaddersTail[i][1] == y) {
+                var nextPos = _this3.tileLayer.getTiledTileAt(_this3.arrayOfLaddersHead[i][0], _this3.arrayOfLaddersHead[i][1]).node.position;
 
-                tween(_this3.playerTwo).to(1, {
-                  position: new Vec3(_nextPos7.x + 8, _nextPos7.y + 15, 1)
+                tween(node).to(1, {
+                  position: new Vec3(nextPos.x + 8, nextPos.y + 15, 1)
                 }, {
                   easing: 'sineIn'
                 }).start();
-                _this3.playerTwoTileX = _this3.arrayOfLaddersHead[i][0];
-                _this3.playerTwoTileY = _this3.arrayOfLaddersHead[i][1];
+
+                if (btnNumber == '1') {
+                  _this3.playerOneTileX = _this3.arrayOfLaddersHead[i][0];
+                  _this3.playerOneTileY = _this3.arrayOfLaddersHead[i][1];
+                } else {
+                  _this3.playerTwoTileX = _this3.arrayOfLaddersHead[i][0];
+                  _this3.playerTwoTileY = _this3.arrayOfLaddersHead[i][1];
+                }
               }
             }
-          }, 1.22);
+          }, waitTime + 0.2);
 
-          if (this.playerTwoTileX == 0 && this.playerTwoTileY == 0) {
-            this.node.getChildByName('playerTwoWon').active = true;
+          if (x == 0 && y == 0) {
+            console.log(child);
+            this.node.getChildByName(child).active = true;
             this.scheduleOnce(function () {
               _this3.button1.active = false;
               _this3.button2.active = false;
+              console.log('Game finished');
               director.pause();
-            }, 2);
+            }, waitTime + 1.3);
           }
 
-          this.scheduleOnce(function () {
-            if (_this3.sumOfChances % 6 == 0 && _this3.sumOfChances != 0 && _this3.sumOfChances != 18) {
-              _this3.button2.active = true;
-            } else if (_this3.sumOfChances == 18) {
-              _this3.sumOfChances = 0;
+          if (btnNumber == '1') {
+            this.scheduleOnce(function () {
+              if (_this3.sumOfChances % 6 == 0 && _this3.sumOfChances != 0 && _this3.sumOfChances != 18 && diceNum != 0) {
+                _this3.button1.active = true;
+              } else if (_this3.sumOfChances == 18) {
+                _this3.sumOfChances = 0;
 
-              var _nextPos8 = _this3.tileLayer.getTiledTileAt(_this3.arrayOfChances[0][0], _this3.arrayOfChances[0][1]).node.position;
+                var nextPos = _this3.tileLayer.getTiledTileAt(_this3.arrayOfChances[0][0], _this3.arrayOfChances[0][1]).node.position;
 
-              tween(_this3.playerTwo).to(1, {
-                position: new Vec3(_nextPos8.x + 8, _nextPos8.y + 15, 1)
-              }, {
-                easing: 'sineIn'
-              }).start();
-              _this3.playerTwoTileX = _this3.arrayOfChances[0][0];
-              _this3.playerTwoTileY = _this3.arrayOfChances[0][1];
-              _this3.arrayOfChances = [];
-              _this3.button1.active = true;
-            } else {
-              _this3.arrayOfChances = [];
-              _this3.sumOfChances = 0;
-              _this3.button1.active = true;
-            }
-          }, 0.21);
+                tween(_this3.playerOne).delay(waitTime + 2.4).to(1, {
+                  position: new Vec3(nextPos.x + 8, nextPos.y + 15, 1)
+                }, {
+                  easing: 'sineIn'
+                }).start();
+                _this3.playerOneTileX = _this3.arrayOfChances[0][0];
+                _this3.playerOneTileY = _this3.arrayOfChances[0][1];
+                _this3.arrayOfChances = [];
+                _this3.button2.active = true;
+              } else {
+                _this3.arrayOfChances = [];
+                _this3.sumOfChances = 0;
+                _this3.button2.active = true;
+              }
+            }, 0.21);
+          } else {
+            this.scheduleOnce(function () {
+              if (_this3.sumOfChances % 6 == 0 && _this3.sumOfChances != 0 && _this3.sumOfChances != 18 && diceNum != 0) {
+                _this3.button2.active = true;
+              } else if (_this3.sumOfChances == 18) {
+                _this3.sumOfChances = 0;
+
+                var nextPos = _this3.tileLayer.getTiledTileAt(_this3.arrayOfChances[0][0], _this3.arrayOfChances[0][1]).node.position;
+
+                tween(_this3.playerTwo).delay(waitTime + 2.4).to(1, {
+                  position: new Vec3(nextPos.x + 8, nextPos.y + 15, 1)
+                }, {
+                  easing: 'sineIn'
+                }).start();
+                _this3.playerTwoTileX = _this3.arrayOfChances[0][0];
+                _this3.playerTwoTileY = _this3.arrayOfChances[0][1];
+                _this3.arrayOfChances = [];
+                _this3.button1.active = true;
+              } else {
+                _this3.arrayOfChances = [];
+                _this3.sumOfChances = 0;
+                _this3.button1.active = true;
+              }
+            }, 0.21);
+          }
         };
 
         return TileScript;

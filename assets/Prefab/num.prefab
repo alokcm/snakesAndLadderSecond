@@ -102,9 +102,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 233,
-      "g": 211,
-      "b": 211,
+      "r": 224,
+      "g": 194,
+      "b": 194,
       "a": 255
     },
     "_string": "asxa",

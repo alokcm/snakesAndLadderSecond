@@ -1182,7 +1182,7 @@
     },
     "component": "",
     "_componentId": "ac253m+E4FMpabxtLyhenLM",
-    "handler": "movePlayer2",
+    "handler": "movePlayer",
     "customEventData": "2"
   },
   {
